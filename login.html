@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    body {
+      background-image: url('https://img.freepik.com/fotos-gratis/arranjo-festivo-de-natal-com-espaco-de-copia_23-2149155853.jpg?w=1380&t=st=1702403838~exp=1702404438~hmac=63ae45658d0489887273adbb7ee25ddac9516e19c0f1a13bb5ba54a7c9f0b688');
+      background-size: cover;
+      background-position: center;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    .container {
+      max-width: 28rem;
+      margin: auto;
+      background-color: #abf0f7;
+      padding: 1.5rem;
+      border-radius: 0.375rem;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      margin-top: 3rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+      color: #2d3748;
+    }
+
+    input {
+      width: 100%;
+      padding: 5PX;
+      border: 1px solid #9fc0ee;
+      border-radius: 0.25rem;
+      margin-bottom: 1rem;
+      margin-right: 9px;
+      background-color: #9efdbf;
+    }
+
+    button {
+      background-color: #4299e1;
+      color: #ffffff;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #3182ce;
+    }
+
+    #mensagem {
+      color: #9fe53e;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 style="font-size: 1.5rem; font-weight: 600; margin-top: 2rem; margin-bottom: 1rem;">Login</h2>
+    <form id="loginForm">
+      <label for="identificador">Email ou Nome:</label>
+      <input type="text" id="identificador" name="identificador" required>
+
+      <label for="senhaLogin">Senha:</label>
+      <input type="password" id="senhaLogin" name="senhaLogin" required>
+
+      <button type="submit">Login</button>
+    </form>
+    <p id="mensagem"></p>
+  </div>
+
+  <script>
+    function exibirMensagem(mensagem, cor = '#9fe53e') {
+      const mensagemElement = document.getElementById('mensagem');
+      mensagemElement.style.color = cor;
+      mensagemElement.innerText = mensagem;
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const identificador = document.getElementById('identificador').value;
+      const senhaLogin = document.getElementById('senhaLogin').value;
+
+      fetch('http://localhost:3540/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ identificador, senha: senhaLogin }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.token) {
+            exibirMensagem('Login realizado com sucesso!');
+            // Redirecionar para a página de sortear após 2 segundos
+            setTimeout(() => {
+              window.location.href = 'grupos.html'; // Substitua pelo caminho correto do arquivo HTML de sortear
+            }, 2000);
+          } else {
+            exibirMensagem('Credenciais inválidas. Usuário não encontrado.');
+          }
+        })
+        .catch(error => {
+          console.error('Erro ao fazer a requisição:', error);
+          exibirMensagem('Erro interno do servidor.');
+        });
+    });
+  </script>
+</body>
+</html>

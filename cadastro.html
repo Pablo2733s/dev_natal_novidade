@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Usuário</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <style>
+    body {
+      background-image: url('https://img.freepik.com/fotos-gratis/arranjo-festivo-de-natal-com-espaco-de-copia_23-2149155853.jpg?w=1380&t=st=1702403838~exp=1702404438~hmac=63ae45658d0489887273adbb7ee25ddac9516e19c0f1a13bb5ba54a7c9f0b688');
+      background-size: cover;
+      background-position: center;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 28rem;
+      background-color: #abf0f7;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+      color: #2d3748;
+    }
+
+    input {
+      width: 100%;
+      padding: 5px;
+      border: 1px solid #9fc0ee;
+      border-radius: 0.25rem;
+      margin-bottom: 1rem;
+      margin-right: 9px;
+      background-color: #9efdbf;
+    }
+
+    button {
+      background-color: #05ef4b;
+      color: #1d1b1b;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #05ef4b;
+    }
+
+    #mensagem {
+      color: #9fe53e;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">Cadastro de Usuário</h2>
+    <form id="cadastroForm">
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" name="nome" placeholder="Nome" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" placeholder="Email" required>
+
+      <label for="senha">Senha:</label>
+      <input type="password" id="senha" name="senha" placeholder="Senha" required>
+
+      <button type="submit">Cadastrar</button>
+    </form>
+    <p id="mensagem"></p>
+  </div>
+
+  <script>
+    // Função para exibir mensagem
+    function exibirMensagem(mensagem, cor = '#9fe53e') {
+      const mensagemElement = document.getElementById('mensagem');
+      mensagemElement.style.color = cor;
+      mensagemElement.innerText = mensagem;
+    }
+
+    // Função para cadastrar usuário
+    document.getElementById('cadastroForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const nome = document.getElementById('nome').value;
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
+
+      fetch('http://localhost:3540/cadastrar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ nome, email, senha }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.mensagem === 'Usuário cadastrado com sucesso!') {
+          exibirMensagem('Cadastro realizado com sucesso!');
+          // Redirecionar para a página de login após 2 segundos
+          setTimeout(() => {
+            window.location.href = 'login.html'; // Substitua pelo caminho correto do arquivo HTML de login
+          }, 2000);
+        } else {
+          exibirMensagem('Erro ao cadastrar usuário.');
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao fazer a requisição:', error);
+        exibirMensagem('Erro interno do servidor.');
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amigo Oculto</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <style>
+    body {
+      background-image: url('https://img.freepik.com/fotos-gratis/arranjo-festivo-de-natal-com-espaco-de-copia_23-2149155853.jpg?w=1380&t=st=1702403838~exp=1702404438~hmac=63ae45658d0489887273adbb7ee25ddac9516e19c0f1a13bb5ba54a7c9f0b688');
+      background-size: cover;
+      background-position: center;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-white p-8 rounded shadow-lg">
+  <h1 class="text-3xl font-semibold mb-6 text-center">Sorteio de Amigo Oculto</h1>
+
+  <!-- Seção de boas-vindas ao grupo -->
+  <div class="mb-4">
+    <h2 class="text-xl font-semibold mb-2 text-center" id="mensagemBoasVindas"></h2>
+  </div>
+
+  <div class="mb-4">
+    <label for="seuNome" class="block text-sm font-medium text-gray-600">Seu Nome:</label>
+    <input type="text" id="seuNome" class="mt-1 p-2 w-full border rounded-md">
+  </div>
+
+  <div class="mb-4">
+    <label for="nomes" class="block text-sm font-medium text-gray-600">Nomes dos Amigos (separados por vírgula):</label>
+    <textarea id="nomes" class="mt-1 p-2 w-full border rounded-md" rows="3"></textarea>
+  </div>
+
+  <button onclick="realizarSorteio()" class="bg-blue-500 text-white px-4 py-2 rounded-md">Realizar Sorteio</button>
+
+  <div id="resultado" class="mt-8 text-xl font-semibold text-center"></div>
+</div>
+
+<script>
+  // Adicione este trecho de script para extrair os parâmetros da URL
+  const params = new URLSearchParams(window.location.search);
+  const nomeGrupo = params.get('grupo');
+  const numPessoas = params.get('numPessoas');
+
+  // Exiba a mensagem de boas-vindas ao grupo
+  document.getElementById('mensagemBoasVindas').textContent = `Bem-vindo ao Grupo: ${nomeGrupo || 'Grupo Desconhecido'}`;
+
+  function realizarSorteio() {
+    const seuNome = document.getElementById('seuNome').value;
+    const nomesInput = document.getElementById('nomes').value;
+    const nomes = nomesInput.split(',').map(nome => nome.trim());
+
+    if (seuNome === '' || nomes.length < 2) {
+      alert('Por favor, preencha seu nome e adicione pelo menos duas pessoas para o sorteio.');
+      return;
+    }
+
+    const resultadoDiv = document.getElementById('resultado');
+    resultadoDiv.innerHTML = ''; // Limpa resultados anteriores
+
+    nomes.forEach(nome => {
+      const amigosSemUsuario = nomes.filter(amigo => amigo.toLowerCase() !== nome.toLowerCase());
+      const amigoOculto = sortearAmigoOculto(amigosSemUsuario);
+
+      const mensagem = document.createElement('p');
+      mensagem.textContent = `${nome === seuNome ? 'Você' : nome}: ${amigoOculto}`;
+      resultadoDiv.appendChild(mensagem);
+    });
+  }
+
+  function sortearAmigoOculto(amigos) {
+    const indiceSorteado = Math.floor(Math.random() * amigos.length);
+    return amigos[indiceSorteado];
+  }
+</script>
+
+</body>
+</html>

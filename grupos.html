@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amigo Oculto - Grupos</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <style>
+    body {
+      background-image: url('https://img.freepik.com/fotos-gratis/arranjo-festivo-de-natal-com-espaco-de-copia_23-2149155853.jpg?w=1380&t=st=1702403838~exp=1702404438~hmac=63ae45658d0489887273adbb7ee25ddac9516e19c0f1a13bb5ba54a7c9f0b688');
+      background-size: cover;
+      background-position: center;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-white p-8 rounded shadow-lg">
+  <h1 class="text-3xl font-semibold mb-6 text-center">Criar Grupo</h1>
+
+  <form id="criarGrupoForm">
+    <div class="mb-4">
+      <label for="nomeGrupo" class="block text-sm font-medium text-gray-600">Nome do Grupo:</label>
+      <input type="text" id="nomeGrupo" class="mt-1 p-2 w-full border rounded-md">
+    </div>
+
+    <div class="mb-4">
+      <label for="numPessoas" class="block text-sm font-medium text-gray-600">Número de Pessoas:</label>
+      <input type="number" id="numPessoas" class="mt-1 p-2 w-full border rounded-md">
+    </div>
+
+    <div class="mb-4">
+      <label for="password" class="block text-sm font-medium text-gray-600">Senha:</label>
+      <input type="password" id="password" class="mt-1 p-2 w-full border rounded-md">
+    </div>
+
+    <button style="display: block; margin: auto; " type="button" onclick="criarGrupo()" class="bg-blue-500 text-white px-4 py-2 rounded-md">Criar Grupo</button>
+    <p style="text-align: center; padding: 5px;">ou</p>
+    <a href="/logingroup.html">
+    <button style="display: block; margin: auto" type="button" class="bg-blue-500 text-white px-4 py-2 rounded-md">Fazer Login</button>
+  </a>
+  </form>
+</div>
+
+<script>
+  async function criarGrupo() {
+    const nomeGrupo = document.getElementById('nomeGrupo').value;
+    const numPessoas = document.getElementById('numPessoas').value;
+    const password = document.getElementById('password').value;
+
+    if (nomeGrupo === '' || numPessoas < 2 || password === '') {
+      alert('Por favor, preencha todos os campos corretamente.');
+      return;
+    }
+
+    const data = { name_grupo: nomeGrupo, number_pess: numPessoas, password };
+
+    try {
+      const response = await fetch('http://localhost:3540/inserir', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro ao criar grupo: ${response.statusText}`);
+      }
+
+      // Redirecionar para a página de sorteio (sortear.html) se a inserção for bem-sucedida
+      window.location.href = `logingroup.html?grupo=${encodeURIComponent(nomeGrupo)}&numPessoas=${encodeURIComponent(numPessoas)}`;
+    } catch (error) {
+      console.error('Erro ao criar grupo:', error);
+      alert('Erro ao criar grupo. Por favor, tente novamente.');
+    }
+  }
+</script>
+
+</body>
+</html>
